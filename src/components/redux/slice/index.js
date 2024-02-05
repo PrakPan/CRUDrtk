@@ -62,6 +62,7 @@ const userDetail = createSlice({
     loading: false,
     error: null,
     searchData: [],
+    success: false,
   },
   reducers: {
     searchUser: (state, action) => {
@@ -79,7 +80,9 @@ const userDetail = createSlice({
         console.log(action.payload);
         // console.log(state.users);
         state.loading = false;
+        state.success =true;
         state.users=[action.payload,...state.users];
+        
       })
       .addCase(create.rejected, (state, action) => {
         state.loading = false;
@@ -91,6 +94,7 @@ const userDetail = createSlice({
       .addCase(read.fulfilled, (state, action) => {
         state.loading = false;
         state.users = action.payload;
+        state.success=false
       })
       .addCase(read.rejected, (state, action) => {
         state.loading = true;

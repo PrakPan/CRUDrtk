@@ -1,11 +1,15 @@
-
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteUser} from "./redux/slice/index";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Result = ({ User,Count }) => {
     const dispatch = useDispatch();
-
+    const notify =()=>{
+       toast("User Deleted");
+    }
   
   return (
     <tr>
@@ -23,7 +27,9 @@ const Result = ({ User,Count }) => {
       <td>
         <button
           className="card-link btn btn-outline-danger btn-sm "
-          onClick={() => dispatch(deleteUser(User))}
+          onClick={() =>{ dispatch(deleteUser(User));
+            notify();
+          }}
         >
           Delete
         </button>

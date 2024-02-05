@@ -13,14 +13,19 @@ const Update = () => {
 
   useEffect(() => {
     if (id) {
-      const singleUser = users.filter((ele) => ele.id === id);
-      setUpdateData(singleUser[0]);
+      const singleUser = users.find((user) => user.id === id);
+      setUpdateData(singleUser || {});
     }
   }, [id, users]);
 
-  const handleSubmit = (values) => {
-    dispatch(update(values));
+  const handleSubmit = (e) => {
+    // e.preventDefault();
+    dispatch(update(updateData));
     navigate("/");
+  };
+
+  const newData = (e) => {
+    setUpdateData({ ...updateData, [e.target.name]: e.target.value });
   };
 
   return (
@@ -38,6 +43,8 @@ const Update = () => {
               name="name"
               className="form-control outline:none rounded"
               placeholder="Enter name"
+              value={updateData && updateData.name}
+              onChange={newData}
             />
             <ErrorMessage name="name" component="div" className="text-danger" />
           </div>
@@ -48,6 +55,8 @@ const Update = () => {
               name="email"
               className="form-control rounded"
               placeholder="Enter Email"
+              value={updateData && updateData.email}
+              onChange={newData}
             />
             <ErrorMessage name="email" component="div" className="text-danger" />
           </div>

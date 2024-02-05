@@ -1,18 +1,34 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { create } from "../../src/components/redux/slice/index";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// toast.configure();
 
 const Create = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { success } = useSelector((state) => state.app);
 
   const handleSubmit = (values) => {
     dispatch(create(values));
     console.log(values);
-    navigate("/");
+   
+   
   };
+
+  useEffect(() => {
+    if (success) {
+      notify(); 
+      setTimeout(() => {
+        navigate("/"); // Navigate to the home page
+      }, 1000);
+    }
+  }, [success, navigate]);
+
 
   const validate = (values) => {
     const errors = {};
@@ -30,8 +46,13 @@ const Create = () => {
     return errors;
   };
 
+  const notify = () => {
+    toast.success("User Created");
+};
+
   return (
     <div className="vh-100 text-center">
+        <ToastContainer />
       <h2 className="mt-3">Fill the details of User</h2>
       <Formik
         initialValues={{ name: "", email: "" }}
@@ -59,9 +80,12 @@ const Create = () => {
             />
             <ErrorMessage name="email" component="div" className="text-danger" />
           </div>
+          <div>
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
+         
+          </div>
         </Form>
       </Formik>
     </div>
