@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { read } from "./redux/slice/index";
 import Result from "./Result";
-import { ToastContainer } from "react-toastify";
 
 const Read = () => {
   const dispatch = useDispatch();
@@ -26,7 +25,6 @@ const Read = () => {
 
   return (
     <div>
-       <ToastContainer/>
       <table className="table">
         <thead>
           <tr>

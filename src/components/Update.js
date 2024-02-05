@@ -28,6 +28,8 @@ const Update = () => {
     setUpdateData({ ...updateData, [e.target.name]: e.target.value });
   };
 
+  
+
   return (
     <div className="vh-100 text-center">
       <h2 className="mt-3">Edit details of User</h2>
