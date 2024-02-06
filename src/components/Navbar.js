@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import { searchUser } from "./redux/slice";
 
 const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -9,8 +11,20 @@ const Navbar = () => {
   };
 
   const handleLinkClick = () => {
-    setNavOpen(false); // Close the menu when a link is clicked
+    setNavOpen(false); 
   };
+
+  const allUsers = useSelector((state) => state.app.users);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const [searchData, setSearchData] = useState("");
+
+  useEffect(() => {
+    console.log(searchData);
+    dispatch(searchUser(searchData));
+  }, [searchData]);
+
+  const isSearchDisabled = location.pathname !== "/";
 
   return (
     <>
@@ -19,7 +33,7 @@ const Navbar = () => {
           <Link to="/" className="navbar-brand">
             Redux CRUD APP
           </Link>
-
+          
           <button
             className="navbar-toggler"
             type="button"
@@ -46,14 +60,23 @@ const Navbar = () => {
                   Create User
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link to="/" className="nav-link ">
+                  {allUsers.length === 0
+                    ? "All Users"
+                    : `All Users (${allUsers.length})`}
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="flex desktop-only">
             <input
-              className="form-control me-2"
+              className="form-control me-2 "
               type="search"
               placeholder="Search User By name"
               aria-label="Search"
+              onChange={(e) => setSearchData(e.target.value)}
+              disabled={isSearchDisabled}
             />
           </div>
         </div>

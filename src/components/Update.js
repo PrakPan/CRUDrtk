@@ -12,6 +12,7 @@ const Update = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    document.title="Update User";
     if (id) {
       const singleUser = users.find((user) => user.id === id);
       setUpdateData(singleUser || {});
@@ -32,7 +33,7 @@ const Update = () => {
 
   return (
     <div className="vh-100 text-center">
-      <h2 className="mt-3">Edit details of User</h2>
+      <h2 className="mt-3">Edit User Details</h2>
       <Formik
         initialValues={{ name: updateData.name || "", email: updateData.email || "" }}
         onSubmit={handleSubmit}
@@ -62,6 +63,9 @@ const Update = () => {
             />
             <ErrorMessage name="email" component="div" className="text-danger" />
           </div>
+          <button type="button" className="btn btn-secondary" style={{marginRight:"1rem"}}onClick={()=>navigate("/")}>
+            Cancel
+          </button>
           <button type="submit" className="btn btn-primary">
             Submit
           </button>

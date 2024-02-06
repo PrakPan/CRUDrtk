@@ -63,6 +63,7 @@ const userDetail = createSlice({
     error: null,
     searchData: [],
     success: false,
+    fetchDone: false,
   },
   reducers: {
     searchUser: (state, action) => {
@@ -94,7 +95,8 @@ const userDetail = createSlice({
       .addCase(read.fulfilled, (state, action) => {
         state.loading = false;
         state.users = action.payload;
-        state.success=false
+        state.success=false;
+        state.fetchDone=false;
       })
       .addCase(read.rejected, (state, action) => {
         state.loading = true;
@@ -137,4 +139,3 @@ const userDetail = createSlice({
 
 export const { searchUser } = userDetail.actions;
 export default userDetail.reducer;
-

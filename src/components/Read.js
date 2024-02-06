@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { read } from "./redux/slice/index";
@@ -6,12 +6,21 @@ import Result from "./Result";
 
 const Read = () => {
   const dispatch = useDispatch();
+  const { users, loading, fetchDone } = useSelector((state) => state.app);
 
-  const { users, loading } = useSelector((state) => state.app);
+  const itemsPerPage = 10; 
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(read());
+    document.title = "Get User";
+    if (!fetchDone) dispatch(read());
   }, []);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = users.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return (
@@ -21,11 +30,9 @@ const Read = () => {
     );
   }
 
-  console.log(users);
-
   return (
-    <div>
-      <table className="table">
+    <div className="table-container">
+      <table className="table table-bordered border-primary">
         <thead>
           <tr>
             <th scope="col">ID</th>
@@ -36,11 +43,18 @@ const Read = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((element, index) => (
-            <Result key={element.id} User={element} Count={index + 1} />
+          {currentItems.map((element, index) => (
+            <Result key={element.id} User={element} Count={index + 1 + indexOfFirstItem} />
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        {Array.from({ length: Math.ceil(users.length / itemsPerPage) }, (_, i) => (
+          <button key={i + 1} onClick={() => paginate(i + 1) }>
+            {i + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

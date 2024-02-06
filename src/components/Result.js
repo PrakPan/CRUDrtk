@@ -1,11 +1,13 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { deleteUser} from "./redux/slice/index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import '../index.css'
 
 const Result = ({ User,Count }) => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const notify =()=>{
        toast("User Deleted");
@@ -17,11 +19,9 @@ const Result = ({ User,Count }) => {
       <td>{User.name}</td>
       <td>{User.email}</td>
       <td>
-        <button className="card-link btn btn-outline-success btn-sm ">
-          <Link to={`/edit/${User.id}`} className="link-class">
+        <button className="card-link btn btn-outline-success btn-sm btn-edit" onClick={()=>navigate(`/edit/${User.id}`)}>
             {" "}
             Edit
-          </Link>
         </button>
       </td>
       <td>

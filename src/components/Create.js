@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import '../index.css'
 
 // toast.configure();
 
@@ -16,30 +17,29 @@ const Create = () => {
   const handleSubmit = (values) => {
     dispatch(create(values));
     console.log(values);
-   
-   
   };
 
   useEffect(() => {
     if (success) {
-      notify(); 
+      notify();
       setTimeout(() => {
-        navigate("/"); // Navigate to the home page
+        navigate("/"); 
       }, 1000);
     }
   }, [success, navigate]);
 
-
   const validate = (values) => {
     const errors = {};
 
-    if (!values.name) {
+    if (!values || !values.name) {
       errors.name = "Name is required";
     }
 
-    if (!values.email) {
+    if (!values || !values.email) {
       errors.email = "Email is required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+    ) {
       errors.email = "Invalid email address";
     }
 
@@ -48,11 +48,11 @@ const Create = () => {
 
   const notify = () => {
     toast.success("User Created");
-};
+  };
 
   return (
     <div className="vh-100 text-center">
-        <ToastContainer />
+      <ToastContainer />
       <h2 className="mt-3">Fill the details of User</h2>
       <Formik
         initialValues={{ name: "", email: "" }}
@@ -78,13 +78,28 @@ const Create = () => {
               className="form-control rounded"
               placeholder="Enter Email"
             />
-            <ErrorMessage name="email" component="div" className="text-danger" />
+            <ErrorMessage
+              name="email"
+              component="div"
+              className="text-danger"
+            />
           </div>
           <div>
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-         
+            <button
+              type="submit"
+              className="btn btn-secondary"
+              onClick={() => navigate("/")}
+              style={{marginRight:"1rem"}}
+            >
+              Go Back
+            </button>
+            <button
+              type="submit"
+              className="disabled"
+              
+            >
+              Submit
+            </button>
           </div>
         </Form>
       </Formik>
