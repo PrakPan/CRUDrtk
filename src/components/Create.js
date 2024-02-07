@@ -31,7 +31,7 @@ const Create = () => {
   const validate = Yup.object().shape({
     name: Yup.string()
       .required("Name is required")
-      .test("name-validation", "Invalid Name", (value) => /^[A-Za-z]+[_]+[A-Za-z]{2,20}$/i.test(value)),
+      .test("name-validation", "Invalid Name", (value) => /^[a-zA-Z]| [a-zA-Z]+$/i.test(value)),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required")
