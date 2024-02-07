@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { searchUser } from "./redux/slice";
+import { useNavigate } from "react-router-dom/dist";
 
 const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -18,11 +19,12 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [searchData, setSearchData] = useState("");
+  const navigate =useNavigate();
 
   useEffect(() => {
     console.log(searchData);
     dispatch(searchUser(searchData));
-  }, [searchData]);
+  }, [searchData,dispatch]);
 
   const isSearchDisabled = location.pathname !== "/";
 
@@ -30,10 +32,19 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
         <div className="container">
-          <Link to="/" className="navbar-brand">
+          <h1 onClick={()=>{setSearchData("");navigate("/")}} className="navbar-brand" style={{cursor:"pointer"}}> 
             Redux CRUD APP
-          </Link>
-          
+          </h1>
+          <div className="flex desktop-only">
+            <input
+              className="form-control me-2 "
+              type="search"
+              placeholder="Search User By name"
+              aria-label="Search"
+              onKeyDown={(e) => {if(e.key ==='Enter') setSearchData(e.target.value)}}
+              disabled={isSearchDisabled}
+            />
+          </div>
           <button
             className="navbar-toggler"
             type="button"
@@ -68,16 +79,6 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div className="flex desktop-only">
-            <input
-              className="form-control me-2 "
-              type="search"
-              placeholder="Search User By name"
-              aria-label="Search"
-              onChange={(e) => setSearchData(e.target.value)}
-              disabled={isSearchDisabled}
-            />
           </div>
         </div>
       </nav>

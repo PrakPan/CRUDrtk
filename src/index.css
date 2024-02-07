@@ -15,3 +15,8 @@ table{
 .btn-edit{
   text-decoration: none;
 }
+.align-middle{
+   font-size: 2rem;
+   font-weight: bolder;
+   margin: .5rem 50%;
+} 

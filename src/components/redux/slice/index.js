@@ -96,7 +96,7 @@ const userDetail = createSlice({
         state.loading = false;
         state.users = action.payload;
         state.success=false;
-        state.fetchDone=false;
+        state.fetchDone=true;
       })
       .addCase(read.rejected, (state, action) => {
         state.loading = true;

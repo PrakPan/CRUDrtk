@@ -1,107 +1,109 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { create } from "../../src/components/redux/slice/index";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { create, update } from "../../src/components/redux/slice/index";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import '../index.css'
-
-// toast.configure();
+import * as Yup from "yup";
 
 const Create = () => {
-  const dispatch = useDispatch();
+  const { users } = useSelector((state) => state.app);
+  const { id } = useParams();
+  const [formData, setFormData] = useState({});
   const navigate = useNavigate();
-  const { success } = useSelector((state) => state.app);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (values) => {
-    dispatch(create(values));
-    console.log(values);
+  const notify = (name) => {
+    toast(`${name} ${id ? "Updated" : "Created"}`);
   };
 
   useEffect(() => {
-    if (success) {
-      notify();
-      setTimeout(() => {
-        navigate("/"); 
-      }, 1000);
+    document.title = id ? "Update User" : "Create User";
+    if (id) {
+      const singleUser = users.find((user) => user.id === id);
+
+      setFormData(singleUser || {});
+    } else {
+      setFormData({});
     }
-  }, [success, navigate]);
+  }, [id, users]);
 
-  const validate = (values) => {
-    const errors = {};
+  const validate = Yup.object().shape({
+    name: Yup.string()
+      .required("Name is required")
+      .test("name-validation", "Invalid Name", (value) => /^[A-Za-z]{2,20}$/i.test(value)),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required")
+      .test(
+        "email-validation",
+        "Invalid email address",
+        (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+      ),
+  });
 
-    if (!values || !values.name) {
-      errors.name = "Name is required";
+  const handleSubmit = (values, { setSubmitting }) => {
+    if (id) {
+      dispatch(update({ ...values, id })); 
+    } else {
+      dispatch(create(values));
     }
-
-    if (!values || !values.email) {
-      errors.email = "Email is required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-    ) {
-      errors.email = "Invalid email address";
-    }
-
-    return errors;
-  };
-
-  const notify = () => {
-    toast.success("User Created");
+    setSubmitting(false);
+    notify(values.name);
+    setTimeout(() => {
+      navigate("/");
+    }, 3000);
   };
 
   return (
     <div className="vh-100 text-center">
       <ToastContainer />
-      <h2 className="mt-3">Fill the details of User</h2>
+      <h2 className="mt-3">{id ? "Edit" : "Create"} User Details</h2>
       <Formik
-        initialValues={{ name: "", email: "" }}
-        validate={validate}
+        initialValues={{ name: formData.name || "", email: formData.email || "" }}
         onSubmit={handleSubmit}
+        enableReinitialize
+        validationSchema={validate}
       >
-        <Form className="w-50 mx-auto my-5">
-          <div className="mb-3">
-            <label className="form-label">Name</label>
-            <Field
-              type="text"
-              name="name"
-              className="form-control outline:none rounded"
-              placeholder="Enter name"
-            />
-            <ErrorMessage name="name" component="div" className="text-danger" />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Email</label>
-            <Field
-              type="email"
-              name="email"
-              className="form-control rounded"
-              placeholder="Enter Email"
-            />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="text-danger"
-            />
-          </div>
-          <div>
+        {({ isSubmitting, isValid }) => (
+          <Form className="w-50 mx-auto my-5">
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <Field
+                type="text"
+                name="name"
+                className="form-control outline:none rounded"
+                placeholder="Enter name"
+              />
+              <ErrorMessage name="name" component="div" className="text-danger" />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Email</label>
+              <Field
+                type="email"
+                name="email"
+                className="form-control rounded"
+                placeholder="Enter Email"
+              />
+              <ErrorMessage name="email" component="div" className="text-danger" />
+            </div>
             <button
-              type="submit"
+              type="button"
               className="btn btn-secondary"
+              style={{ marginRight: "1rem" }}
               onClick={() => navigate("/")}
-              style={{marginRight:"1rem"}}
             >
-              Go Back
+              Cancel
             </button>
             <button
               type="submit"
-              className="disabled"
-              
+              className="btn btn-success"
+              disabled={!isValid || isSubmitting}
             >
               Submit
             </button>
-          </div>
-        </Form>
+          </Form>
+        )}
       </Formik>
     </div>
   );

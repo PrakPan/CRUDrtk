@@ -3,10 +3,13 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { read } from "./redux/slice/index";
 import Result from "./Result";
+import { ToastContainer } from "react-toastify";
+import "../index.css";
 
 const Read = () => {
   const dispatch = useDispatch();
-  const { users, loading, fetchDone } = useSelector((state) => state.app);
+  const { users, loading, fetchDone ,searchData} = useSelector((state) => state.app);
+  console.log(searchData);
 
   const itemsPerPage = 10; 
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +17,7 @@ const Read = () => {
   useEffect(() => {
     document.title = "Get User";
     if (!fetchDone) dispatch(read());
-  }, []);
+  }, [dispatch,fetchDone]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -32,6 +35,7 @@ const Read = () => {
 
   return (
     <div className="table-container">
+      <ToastContainer/>
       <table className="table table-bordered border-primary">
         <thead>
           <tr>
@@ -43,7 +47,7 @@ const Read = () => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((element, index) => (
+          {currentItems.filter((element)=>{return searchData ==="" ? element : element.name.toLowerCase().includes(searchData) || element.name.toUpperCase().includes(searchData)}).map((element, index) => (
             <Result key={element.id} User={element} Count={index + 1 + indexOfFirstItem} />
           ))}
         </tbody>
