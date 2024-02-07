@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { searchUser } from "./redux/slice";
 import { useNavigate } from "react-router-dom/dist";
+import '../index.css'
 
 const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
