@@ -44,7 +44,20 @@ const Navbar = () => {
               aria-label="Search"
               onKeyDown={(e) => {if(e.key ==='Enter') setSearchData(e.target.value)}}
               disabled={isSearchDisabled}
+              list="programmingLanguages"
             />
+            <datalist id="programmingLanguages">
+                <option value="whiteboard">whiteboard</option>
+                <option value="Loan">Loan</option>
+                <option value="frugal">frugal</option>
+                <option value="usually">usually</option>
+                <option value="DNS">DNS</option>
+                <option value="Mobility">Mobility</option>
+                <option value="Licensed">Licensed</option>
+                <option value="navigating">navigating</option>
+                <option value="Representative">Representative</option>
+                <option value="blind">blind</option>
+            </datalist>
           </div>
           <button
             className="navbar-toggler"
