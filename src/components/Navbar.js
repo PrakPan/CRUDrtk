@@ -44,9 +44,9 @@ const Navbar = () => {
               aria-label="Search"
               onKeyDown={(e) => {if(e.key ==='Enter') setSearchData(e.target.value)}}
               disabled={isSearchDisabled}
-              list="programmingLanguages"
+              list="listvalue"
             />
-            <datalist id="programmingLanguages">
+            <datalist id="listvalue">
                 <option value="whiteboard">whiteboard</option>
                 <option value="Loan">Loan</option>
                 <option value="frugal">frugal</option>
